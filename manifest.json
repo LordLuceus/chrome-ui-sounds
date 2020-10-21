@@ -1,0 +1,16 @@
+{
+    "name": "Navigation Sounds",
+    "version": "0.1.0",
+    "description": "Play sounds for important events in the browser, such as a page loading or a new tab being created.",
+    "manifest_version": 2,
+    "icons": {
+        "128": "icon_128.png",
+        "16": "icon_16.png",
+        "32": "icon_32.png"
+    },
+    "background": {
+        "persistent": false,
+        "scripts": ["background.js"]
+    },
+    "permissions": ["tabs"]
+}
