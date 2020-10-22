@@ -12,5 +12,6 @@
         "persistent": false,
         "scripts": ["background.js"]
     },
-    "permissions": ["tabs"]
+    "permissions": ["storage", "tabs"],
+    "options_page": "options.html"
 }

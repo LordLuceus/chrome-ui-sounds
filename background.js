@@ -1,15 +1,16 @@
-// These variables will store our Audio objects.
-let tabUpdate;
-let tabSwitch;
-let tabNew;
-let tabClose;
+const sounds = {
+    tabNew: new Audio("tabNew.wav"),
+    tabClose: new Audio("tabClose.wav"),
+    tabUpdate: new Audio("tabUpdate.wav"),
+    tabSwitch: new Audio("tabSwitch.wav")
+};
 
 // Check if the user selected a custom sound, use default if not.
-const getSound = (sound) => {
+const setSound = (sound) => {
     if (localStorage.getItem(sound)) {
         return new Audio(localStorage.getItem(sound));
     }
-    return new Audio(`${sound}.wav`);
+    return sounds[sound];
 };
 
 // Play the sound
@@ -23,21 +24,21 @@ const playSound = (sound) => {
 const { storage, tabs } = chrome;
 
 tabs.onActivated.addListener(() => {
-    tabSwitch = getSound("tabSwitch");
-    playSound(tabSwitch);
+    sounds.tabSwitch = setSound("tabSwitch");
+    playSound(sounds.tabSwitch);
 });
 
 tabs.onUpdated.addListener(() => {
-    tabUpdate = getSound("tabUpdate");
-    playSound(tabUpdate);
+    sounds.tabUpdate = setSound("tabUpdate");
+    playSound(sounds.tabUpdate);
 });
 
 tabs.onCreated.addListener(() => {
-    tabNew = getSound("tabNew");
-    playSound(tabNew);
+    sounds.tabNew = setSound("tabNew");
+    playSound(sounds.tabNew);
 });
 
 tabs.onRemoved.addListener(() => {
-    tabClose = getSound("tabClose");
-    playSound(tabClose);
+    sounds.tabClose = setSound("tabClose");
+    playSound(sounds.tabClose);
 });
