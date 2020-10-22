@@ -14,11 +14,15 @@ const setSound = (sound) => {
 };
 
 // Play the sound
-const playSound = (sound) => {
+const playSound = (sound, name) => {
     if (localStorage.getItem("volume")) {
         sound.volume = localStorage.getItem("volume");
     }
-    sound.play();
+    storage.sync.get(`${name}Enabled`, (result) => {
+        if (result[name + "Enabled"]) {
+            sound.play();
+        }
+    });
 };
 
 const { storage, tabs } = chrome;
@@ -30,7 +34,7 @@ tabs.onActivated.addListener(() => {
 
 tabs.onUpdated.addListener(() => {
     sounds.tabUpdate = setSound("tabUpdate");
-    playSound(sounds.tabUpdate);
+    playSound(sounds.tabUpdate, "tabUpdate");
 });
 
 tabs.onCreated.addListener(() => {

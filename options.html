@@ -4,10 +4,11 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Navigation Sounds Options</title>
+        <script src="options.js" defer></script>
     </head>
     <body>
         <h1>Navigation Sounds Options</h1>
-        <label for="volume-slider">Volume</label>
+        <label for="volume-slider">Global volume</label>
         <input
             id="volume-slider"
             type="range"
@@ -16,5 +17,32 @@
             step="1"
             value="100"
         />
+        <div id="tabUpdate" style="display: flex; flex-direction: column">
+            <h2>Tab Updated</h2>
+            <input
+                type="checkbox"
+                id="tab-update-toggle"
+                class="toggle"
+                checked
+            />
+            <label for="tab-update-toggle">Enable this sound</label>
+            <label for="tab-update-volume">Volume</label>
+            <input
+                id="tab-update-volume"
+                class="volume"
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                value="100"
+            />
+            <label for="tab-update-custom">Choose a custom sound</label>
+            <input
+                type="file"
+                id="tab-update-custom"
+                class="custom"
+                accept="audio/*"
+            />
+        </div>
     </body>
 </html>
