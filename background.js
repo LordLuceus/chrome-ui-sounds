@@ -1,10 +1,10 @@
 const { storage, tabs } = chrome;
 
 const sounds = {
-    tabNew: null,
-    tabClose: null,
-    tabUpdate: null,
-    tabSwitch: null
+    tabNew: new Audio("tabNew.wav"),
+    tabClose: new Audio("tabClose.wav"),
+    tabUpdate: new Audio("tabUpdate.wav"),
+    tabSwitch: new Audio("tabSwitch.wav")
 };
 
 // Check if the user selected a custom sound, use default if not.

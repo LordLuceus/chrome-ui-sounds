@@ -1,9 +1,16 @@
 const { storage } = chrome;
 
-// This function takes an array of elements, iterates over them, and saves each option to Chrome storage appropriately
+const settings = {};
+
+const globalVolumeElement = document.querySelector("#globalVolume");
+globalVolumeElement.addEventListener("change", (event) => {
+    settings.globalVolume = event.target.value / 100;
+});
+
+// This function takes an array of elements, iterates over them, and saves each option to a property in the settings object for later storage. We need to do this intermediate step in order to avoid running up against chrome.storage limitations.
 const saveOptions = (options) => {
     options.forEach((element, index) => {
-        // Make sure the UI follows the state.
+        // Make sure the UI reflects the state.
         if (index === 0) {
             storage.sync.get(`${element.parentElement.id}Enabled`, (result) => {
                 if (!result[element.parentElement.id + "Enabled"]) {
@@ -17,12 +24,21 @@ const saveOptions = (options) => {
                     }
                 }
             });
+        } else if (index === 1) {
+            storage.sync.get(`${element.parentElement.id}Volume`, (result) => {
+                if (result[element.parentElement.id + "Volume"]) {
+                    element.value =
+                        result[element.parentElement.id + "Volume"] * 100;
+                }
+            });
         }
-        element.addEventListener("input", (event) => {
+        element.addEventListener("change", (event) => {
             if (index === 0) {
-                storage.sync.set({
-                    [element.parentElement.id + "Enabled"]: event.target.checked
-                });
+                settings[element.parentElement.id + "Enabled"] =
+                    event.target.checked;
+            } else if (index === 1) {
+                settings[element.parentElement.id + "Volume"] =
+                    parseFloat(event.target.value) / 100;
             }
         });
     });
