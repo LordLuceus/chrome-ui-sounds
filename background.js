@@ -1,3 +1,5 @@
+const { storage, tabs } = chrome;
+
 const sounds = {
     tabNew: null,
     tabClose: null,
@@ -6,45 +8,59 @@ const sounds = {
 };
 
 // Check if the user selected a custom sound, use default if not.
-const setSound = (sound) => {
-    if (localStorage.getItem(sound)) {
-        return new Audio(localStorage.getItem(sound));
-    }
-    return new Audio(`${sound}.wav`);
+const setSound = (sound, func) => {
+    storage.local.get(sound, (result) => {
+        if (result[sound]) {
+            func(new Audio(result[sound]));
+        } else {
+            func(new Audio(`${sound}.wav`));
+        }
+    });
 };
 
 // Check the volume and if the sound is enabled, then play it.
 const playSound = (sound, name) => {
-    storage.sync.get("globalVolume", (result) => {
-        if (result.globalVolume) {
-            sound.volume = result.globalVolume;
+    storage.sync.get(
+        ["globalVolume", `${name}Enabled`, `${name}Volume`],
+        (result) => {
+            if (result.globalVolume) {
+                sound.volume = parseFloat(result.globalVolume);
+            } else if (result.globalVolume && result[name + "Volume"]) {
+                sound.volume =
+                    parseFloat(result.globalVolume) *
+                    parseFloat(result[name + "Volume"]);
+            }
+            if (result[name + "Enabled"]) {
+                sound.play();
+            }
         }
-    });
-    storage.sync.get(`${name}Enabled`, (result) => {
-        if (result[name + "Enabled"]) {
-            sound.play();
-        }
-    });
+    );
 };
 
-const { storage, tabs } = chrome;
-
 tabs.onActivated.addListener(() => {
-    sounds.tabSwitch = setSound("tabSwitch");
+    setSound("tabSwitch", (value) => {
+        sounds.tabSwitch = value;
+    });
     playSound(sounds.tabSwitch, "tabSwitch");
 });
 
 tabs.onUpdated.addListener(() => {
-    sounds.tabUpdate = setSound("tabUpdate");
+    setSound("tabUpdate", (value) => {
+        sounds.tabUpdate = value;
+    });
     playSound(sounds.tabUpdate, "tabUpdate");
 });
 
 tabs.onCreated.addListener(() => {
-    sounds.tabNew = setSound("tabNew");
+    setSound("tabNew", (value) => {
+        sounds.tabNew = value;
+    });
     playSound(sounds.tabNew, "tabNew");
 });
 
 tabs.onRemoved.addListener(() => {
-    sounds.tabClose = setSound("tabClose");
+    setSound("tabClose", (value) => {
+        sounds.tabClose = value;
+    });
     playSound(sounds.tabClose, "tabClose");
 });
