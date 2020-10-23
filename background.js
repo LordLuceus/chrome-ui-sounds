@@ -1,8 +1,8 @@
 const sounds = {
-    tabNew: new Audio("tabNew.wav"),
-    tabClose: new Audio("tabClose.wav"),
-    tabUpdate: new Audio("tabUpdate.wav"),
-    tabSwitch: new Audio("tabSwitch.wav")
+    tabNew: null,
+    tabClose: null,
+    tabUpdate: null,
+    tabSwitch: null
 };
 
 // Check if the user selected a custom sound, use default if not.
@@ -10,7 +10,7 @@ const setSound = (sound) => {
     if (localStorage.getItem(sound)) {
         return new Audio(localStorage.getItem(sound));
     }
-    return sounds[sound];
+    return new Audio(`${sound}.wav`);
 };
 
 // Check the volume and if the sound is enabled, then play it.
