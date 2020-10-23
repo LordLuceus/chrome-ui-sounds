@@ -8,15 +8,17 @@
     </head>
     <body>
         <h1>Navigation Sounds Options</h1>
-        <label for="volume-slider">Global volume</label>
-        <input
-            id="volume-slider"
-            type="range"
-            min="0"
-            max="100"
-            step="1"
-            value="100"
-        />
+        <div id="global">
+            <label for="volume-slider">Global volume</label>
+            <input
+                id="volume-slider"
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                value="100"
+            />
+        </div>
         <div id="tabUpdate" style="display: flex; flex-direction: column">
             <h2>Tab Updated</h2>
             <input
@@ -40,6 +42,33 @@
             <input
                 type="file"
                 id="tab-update-custom"
+                class="custom"
+                accept="audio/*"
+            />
+        </div>
+        <div id="tabSwitch" style="display: flex; flex-direction: column">
+            <h2>Tab Switched</h2>
+            <input
+                type="checkbox"
+                id="tab-switch-toggle"
+                class="toggle"
+                checked
+            />
+            <label for="tab-switch-toggle">Enable this sound</label>
+            <label for="tab-switch-volume">Volume</label>
+            <input
+                id="tab-switch-volume"
+                class="volume"
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                value="100"
+            />
+            <label for="tab-switch-custom">Choose a custom sound</label>
+            <input
+                type="file"
+                id="tab-switch-custom"
                 class="custom"
                 accept="audio/*"
             />
