@@ -1,6 +1,6 @@
 {
-    "name": "Navigation Sounds",
-    "version": "0.1.0",
+    "name": "UI Sounds",
+    "version": "1.0.0",
     "description": "Play sounds for important events in the browser, such as a page loading or a new tab being created.",
     "manifest_version": 2,
     "icons": {
