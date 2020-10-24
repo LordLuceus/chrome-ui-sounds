@@ -1,10 +1,16 @@
 const { storage } = chrome;
 
-const settings = {};
+const settingsSync = {};
+const settingsLocal = {};
 
 const globalVolumeElement = document.querySelector("#globalVolume");
+storage.sync.get("globalVolume", (result) => {
+    if (result.globalVolume) {
+        globalVolumeElement.value = result.globalVolume * 100;
+    }
+});
 globalVolumeElement.addEventListener("change", (event) => {
-    settings.globalVolume = event.target.value / 100;
+    settingsSync.globalVolume = parseFloat(event.target.value) / 100;
 });
 
 // This function takes an array of elements, iterates over them, and saves each option to a property in the settings object for later storage. We need to do this intermediate step in order to avoid running up against chrome.storage limitations.
@@ -34,11 +40,15 @@ const saveOptions = (options) => {
         }
         element.addEventListener("change", (event) => {
             if (index === 0) {
-                settings[element.parentElement.id + "Enabled"] =
+                settingsSync[element.parentElement.id + "Enabled"] =
                     event.target.checked;
             } else if (index === 1) {
-                settings[element.parentElement.id + "Volume"] =
+                settingsSync[element.parentElement.id + "Volume"] =
                     parseFloat(event.target.value) / 100;
+            } else if (index === 2) {
+                settingsLocal[element.parentElement.id] = URL.createObjectURL(
+                    element.files[0]
+                );
             }
         });
     });
@@ -59,3 +69,28 @@ const executeOptions = (optionGroup) => {
 
 executeOptions(document.querySelector("#tabUpdate"));
 executeOptions(document.querySelector("#tabSwitch"));
+executeOptions(document.querySelector("#tabNew"));
+executeOptions(document.querySelector("#tabClose"));
+
+document.querySelector("#save").addEventListener("click", () => {
+    storage.sync.set({ ...settingsSync });
+    storage.local.set({ ...settingsLocal });
+});
+
+document.querySelector("#reset").addEventListener("click", () => {
+    storage.sync.clear();
+    storage.local.clear();
+    volumeSliders = document.querySelectorAll("input[type='range']");
+    volumeSliders.forEach((element) => {
+        element.value = element.dataset.default;
+        console.log(element.value);
+    });
+    toggles = document.querySelectorAll("input[type='checkbox']");
+    toggles.forEach((element) => {
+        element.checked = true;
+    });
+    const customInputs = document.querySelectorAll("input[type='file']");
+    customInputs.forEach((element) => {
+        element.value = "";
+    });
+});

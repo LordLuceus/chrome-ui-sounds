@@ -8,24 +8,30 @@
     </head>
     <body>
         <h1>Navigation Sounds Options</h1>
-        <div id="global">
+        <section id="global" aria-label="Global Options">
             <label for="globalVolume">Global volume</label>
             <input
                 id="globalVolume"
                 type="range"
-                min="0"
+                min="1"
                 max="100"
                 step="1"
                 value="100"
+                data-default="100"
             />
-        </div>
-        <div id="tabUpdate" style="display: flex; flex-direction: column">
+        </section>
+        <section
+            id="tabUpdate"
+            aria-label="Tab Updated"
+            style="display: flex; flex-direction: column"
+        >
             <h2>Tab Updated</h2>
             <input
                 type="checkbox"
                 id="tab-update-toggle"
                 class="toggle"
                 checked
+                data-default="true"
             />
             <label for="tab-update-toggle">Enable this sound</label>
             <label for="tab-update-volume">Volume</label>
@@ -33,10 +39,11 @@
                 id="tab-update-volume"
                 class="volume"
                 type="range"
-                min="0"
+                min="1"
                 max="100"
                 step="1"
                 value="100"
+                data-default="100"
             />
             <label for="tab-update-custom">Choose a custom sound</label>
             <input
@@ -44,15 +51,21 @@
                 id="tab-update-custom"
                 class="custom"
                 accept="audio/*"
+                data-default=""
             />
-        </div>
-        <div id="tabSwitch" style="display: flex; flex-direction: column">
+        </section>
+        <section
+            id="tabSwitch"
+            aria-label="Tab Switched"
+            style="display: flex; flex-direction: column"
+        >
             <h2>Tab Switched</h2>
             <input
                 type="checkbox"
                 id="tab-switch-toggle"
                 class="toggle"
                 checked
+                data-default="true"
             />
             <label for="tab-switch-toggle">Enable this sound</label>
             <label for="tab-switch-volume">Volume</label>
@@ -60,10 +73,11 @@
                 id="tab-switch-volume"
                 class="volume"
                 type="range"
-                min="0"
+                min="1"
                 max="100"
                 step="1"
                 value="100"
+                data-default="100"
             />
             <label for="tab-switch-custom">Choose a custom sound</label>
             <input
@@ -71,7 +85,80 @@
                 id="tab-switch-custom"
                 class="custom"
                 accept="audio/*"
+                data-default=""
             />
-        </div>
+        </section>
+        <section
+            id="tabNew"
+            aria-label="New Tab Created"
+            style="display: flex; flex-direction: column"
+        >
+            <h2>New Tab Created</h2>
+            <input
+                type="checkbox"
+                id="tab-new-toggle"
+                class="toggle"
+                checked
+                data-default="true"
+            />
+            <label for="tab-new-toggle">Enable this sound</label>
+            <label for="tab-new-volume">Volume</label>
+            <input
+                id="tab-new-volume"
+                class="volume"
+                type="range"
+                min="1"
+                max="100"
+                step="1"
+                value="100"
+                data-default="100"
+            />
+            <label for="tab-new-custom">Choose a custom sound</label>
+            <input
+                type="file"
+                id="tab-new-custom"
+                class="custom"
+                accept="audio/*"
+                data-default=""
+            />
+        </section>
+        <section
+            id="tabClose"
+            aria-label="Tab Closed"
+            style="display: flex; flex-direction: column"
+        >
+            <h2>Tab Closed</h2>
+            <input
+                type="checkbox"
+                id="tab-close-toggle"
+                class="toggle"
+                checked
+                data-default="true"
+            />
+            <label for="tab-close-toggle">Enable this sound</label>
+            <label for="tab-close-volume">Volume</label>
+            <input
+                id="tab-close-volume"
+                class="volume"
+                type="range"
+                min="1"
+                max="100"
+                step="1"
+                value="100"
+                data-default="100"
+            />
+            <label for="tab-close-custom">Choose a custom sound</label>
+            <input
+                type="file"
+                id="tab-close-custom"
+                class="custom"
+                accept="audio/*"
+                data-default=""
+            />
+        </section>
+        <section id="save-reset" aria-label="Save or Reset Options">
+            <button id="save">Save Options</button>
+            <button id="reset">Reset to Default</button>
+        </section>
     </body>
 </html>

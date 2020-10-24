@@ -23,14 +23,19 @@ const playSound = (sound, name) => {
     storage.sync.get(
         ["globalVolume", `${name}Enabled`, `${name}Volume`],
         (result) => {
-            if (result.globalVolume) {
-                sound.volume = parseFloat(result.globalVolume);
-            } else if (result.globalVolume && result[name + "Volume"]) {
+            if (result.globalVolume && result[name + "Volume"]) {
                 sound.volume =
                     parseFloat(result.globalVolume) *
                     parseFloat(result[name + "Volume"]);
+            } else if (result.globalVolume) {
+                sound.volume = parseFloat(result.globalVolume);
+            } else if (result[name + "Volume"]) {
+                sound.volume = parseFloat(result[name + "Volume"]);
             }
-            if (result[name + "Enabled"]) {
+            if (
+                result[name + "Enabled"] ||
+                result[name + "Enabled"] === undefined
+            ) {
                 sound.play();
             }
         }
