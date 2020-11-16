@@ -3,11 +3,11 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Navigation Sounds Options</title>
+        <title>UI Sounds Options</title>
         <script src="options.js" defer></script>
     </head>
     <body>
-        <h1>Navigation Sounds Options</h1>
+        <h1>UI Sounds Options</h1>
         <section id="global" aria-label="Global Options">
             <label for="globalVolume">Global volume</label>
             <input
@@ -45,14 +45,6 @@
                 value="100"
                 data-default="100"
             />
-            <label for="tab-update-custom">Choose a custom sound</label>
-            <input
-                type="file"
-                id="tab-update-custom"
-                class="custom"
-                accept="audio/*"
-                data-default=""
-            />
         </section>
         <section
             id="tabSwitch"
@@ -78,14 +70,6 @@
                 step="1"
                 value="100"
                 data-default="100"
-            />
-            <label for="tab-switch-custom">Choose a custom sound</label>
-            <input
-                type="file"
-                id="tab-switch-custom"
-                class="custom"
-                accept="audio/*"
-                data-default=""
             />
         </section>
         <section
@@ -113,14 +97,6 @@
                 value="100"
                 data-default="100"
             />
-            <label for="tab-new-custom">Choose a custom sound</label>
-            <input
-                type="file"
-                id="tab-new-custom"
-                class="custom"
-                accept="audio/*"
-                data-default=""
-            />
         </section>
         <section
             id="tabClose"
@@ -147,18 +123,12 @@
                 value="100"
                 data-default="100"
             />
-            <label for="tab-close-custom">Choose a custom sound</label>
-            <input
-                type="file"
-                id="tab-close-custom"
-                class="custom"
-                accept="audio/*"
-                data-default=""
-            />
         </section>
         <section id="save-reset" aria-label="Save or Reset Options">
             <button id="save">Save Options</button>
             <button id="reset">Reset to Default</button>
+            <p style="display: none" role="alert" id="save-confirm"></p>
+            <p style="display: none" role="alert" id="reset-confirm"></p>
         </section>
     </body>
 </html>

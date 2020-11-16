@@ -11,7 +11,7 @@ const sounds = {
 const setSound = (sound, func) => {
     storage.local.get(sound, (result) => {
         if (result[sound]) {
-            func(new Audio(result[sound]));
+            func(new Audio(URL.createObjectURL(result[sound])));
         } else {
             func(new Audio(`${sound}.wav`));
         }

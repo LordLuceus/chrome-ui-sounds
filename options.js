@@ -1,7 +1,6 @@
 const { storage } = chrome;
 
 const settingsSync = {};
-const settingsLocal = {};
 
 const globalVolumeElement = document.querySelector("#globalVolume");
 storage.sync.get("globalVolume", (result) => {
@@ -45,10 +44,6 @@ const saveOptions = (options) => {
             } else if (index === 1) {
                 settingsSync[element.parentElement.id + "Volume"] =
                     parseFloat(event.target.value) / 100;
-            } else if (index === 2) {
-                settingsLocal[element.parentElement.id] = URL.createObjectURL(
-                    element.files[0]
-                );
             }
         });
     });
@@ -58,7 +53,6 @@ const populateOptionsArray = (optionGroup) => {
     return [
         optionGroup.querySelector(".toggle"),
         optionGroup.querySelector(".volume"),
-        optionGroup.querySelector(".custom")
     ];
 };
 
@@ -74,23 +68,22 @@ executeOptions(document.querySelector("#tabClose"));
 
 document.querySelector("#save").addEventListener("click", () => {
     storage.sync.set({ ...settingsSync });
-    storage.local.set({ ...settingsLocal });
+    const saveConfirm = document.querySelector("#save-confirm");
+    saveConfirm.style.display = "block";
+    saveConfirm.textContent = "Options saved.";
 });
 
 document.querySelector("#reset").addEventListener("click", () => {
     storage.sync.clear();
-    storage.local.clear();
     volumeSliders = document.querySelectorAll("input[type='range']");
     volumeSliders.forEach((element) => {
         element.value = element.dataset.default;
-        console.log(element.value);
     });
     toggles = document.querySelectorAll("input[type='checkbox']");
     toggles.forEach((element) => {
         element.checked = true;
     });
-    const customInputs = document.querySelectorAll("input[type='file']");
-    customInputs.forEach((element) => {
-        element.value = "";
-    });
+    const resetConfirm = document.querySelector("#reset-confirm");
+    resetConfirm.style.display = "block";
+    resetConfirm.textContent = "Options reset.";
 });
