@@ -66,6 +66,15 @@ executeOptions(document.querySelector("#tabSwitch"));
 executeOptions(document.querySelector("#tabNew"));
 executeOptions(document.querySelector("#tabClose"));
 
+const testButtons = document.querySelectorAll(".test");
+testButtons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+        const sound = e.target.parentElement.id;
+        new Audio(`${sound}.wav`).play();
+    });
+});
+
+
 document.querySelector("#save").addEventListener("click", () => {
     storage.sync.set({ ...settingsSync });
     const saveConfirm = document.querySelector("#save-confirm");
