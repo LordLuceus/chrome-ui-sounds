@@ -8,7 +8,16 @@
     </head>
     <body>
         <h1>UI Sounds Options</h1>
-        <section id="global" aria-label="Global Options">
+        <section
+            id="global"
+            aria-label="Global Options"
+            style="display: flex; flex-direction: column"
+        >
+            <label for="soundpack">Select a soundpack</label>
+            <select id="soundpack">
+                <option value="default" selected>Default</option>
+                <option value="nostromo">Nostromo</option>
+            </select>
             <label for="globalVolume">Global volume</label>
             <input
                 id="globalVolume"

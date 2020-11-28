@@ -12,6 +12,16 @@ globalVolumeElement.addEventListener("change", (event) => {
     settingsSync.globalVolume = parseFloat(event.target.value) / 100;
 });
 
+const soundpackSelector = document.querySelector("#soundpack");
+storage.sync.get("soundpack", (result) => {
+    if (result.soundpack) {
+        soundpackSelector.value = result.soundpack;
+    }
+});
+soundpackSelector.addEventListener("change", (e) => {
+    settingsSync.soundpack = e.target.value;
+});
+
 // This function takes an array of elements, iterates over them, and saves each option to a property in the settings object for later storage. We need to do this intermediate step in order to avoid running up against chrome.storage limitations.
 const saveOptions = (options) => {
     options.forEach((element, index) => {
@@ -52,7 +62,7 @@ const saveOptions = (options) => {
 const populateOptionsArray = (optionGroup) => {
     return [
         optionGroup.querySelector(".toggle"),
-        optionGroup.querySelector(".volume"),
+        optionGroup.querySelector(".volume")
     ];
 };
 
@@ -70,10 +80,11 @@ const testButtons = document.querySelectorAll(".test");
 testButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
         const sound = e.target.parentElement.id;
-        new Audio(`${sound}.wav`).play();
+        new Audio(
+            `sounds/${settingsSync.soundpack || "default"}/${sound}.wav`
+        ).play();
     });
 });
-
 
 document.querySelector("#save").addEventListener("click", () => {
     storage.sync.set({ ...settingsSync });
@@ -84,11 +95,15 @@ document.querySelector("#save").addEventListener("click", () => {
 
 document.querySelector("#reset").addEventListener("click", () => {
     storage.sync.clear();
-    volumeSliders = document.querySelectorAll("input[type='range']");
+    for (let prop in settingsSync) {
+        delete settingsSync[prop];
+    }
+    soundpackSelector.value = "default";
+    const volumeSliders = document.querySelectorAll("input[type='range']");
     volumeSliders.forEach((element) => {
         element.value = element.dataset.default;
     });
-    toggles = document.querySelectorAll("input[type='checkbox']");
+    const toggles = document.querySelectorAll("input[type='checkbox']");
     toggles.forEach((element) => {
         element.checked = true;
     });
