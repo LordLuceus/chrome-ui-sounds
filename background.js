@@ -1,73 +1,66 @@
-const { storage, tabs } = chrome;
+const { storage, tabs, offscreen, runtime } = chrome;
 
 const settings = {};
 storage.sync.get(null, (result) => {
-    settings.sync = { ...result };
+    Object.assign(settings, result);
 });
 
 storage.sync.onChanged.addListener((changes) => {
-    storage.sync.get(null, (result) => {
-        if (!result) {
-            settings.sync = {};
+    for (const [key, { newValue }] of Object.entries(changes)) {
+        settings[key] = newValue;
+    }
+});
+
+async function ensureOffscreen() {
+    try {
+        if (!(await offscreen.hasDocument())) {
+            await offscreen.createDocument({
+                url: chrome.runtime.getURL('offscreen.html'),
+                reasons: ['AUDIO_PLAYBACK'],
+                justification: 'Play audio for UI sounds',
+            });
         }
-    });
-    for (let key in changes) {
-        const storageChange = changes[key];
-        settings.sync[key] = storageChange.newValue;
+    } catch (err) {
+        // Ignore duplicate creation error
+        if (!err.message.includes('Only a single offscreen document may be created')) {
+            throw err;
+        }
     }
-});
+}
 
-const setSound = (sound, func) => {
-    func(
-        new Audio(`sounds/${settings.sync.soundpack || "default"}/${sound}.wav`)
-    );
-};
-
-const sounds = {};
-
-// Check the volume and if the sound is enabled, then play it.
-const playSound = (sound, name) => {
-    if (settings.sync.globalVolume && settings.sync[name + "Volume"]) {
-        sound.volume =
-            parseFloat(settings.sync.globalVolume) *
-            parseFloat(settings.sync[name + "Volume"]);
-    } else if (settings.sync.globalVolume) {
-        sound.volume = parseFloat(settings.sync.globalVolume);
-    } else if (settings.sync[name + "Volume"]) {
-        sound.volume = parseFloat(settings.sync[name + "Volume"]);
+async function playEvent(soundKey) {
+    const enabled = settings[soundKey + 'Enabled'];
+    if (enabled === false) {
+        return;
     }
-    if (
-        settings.sync[name + "Enabled"] ||
-        settings.sync[name + "Enabled"] === undefined
-    ) {
-        sound.play();
+    const globalVol = parseFloat(settings.globalVolume ?? 1);
+    const specificVol = parseFloat(settings[soundKey + 'Volume'] ?? 1);
+    const volume = globalVol * specificVol;
+    const pack = settings.soundpack || 'default';
+    const url = chrome.runtime.getURL(`sounds/${pack}/${soundKey}.wav`);
+
+    await ensureOffscreen();
+    try {
+        await runtime.sendMessage({ type: 'play', url, volume });
+    } catch (err) {
+        // Offscreen listener may not be ready yet; ignore
     }
-};
+}
 
-tabs.onActivated.addListener(() => {
-    setSound("tabSwitch", (value) => {
-        sounds.tabSwitch = value;
-    });
-    playSound(sounds.tabSwitch, "tabSwitch");
-});
+tabs.onActivated.addListener(() => playEvent('tabSwitch'));
+tabs.onUpdated.addListener(() => playEvent('tabUpdate'));
+tabs.onCreated.addListener(() => playEvent('tabNew'));
+tabs.onRemoved.addListener(() => playEvent('tabClose'));
 
-tabs.onUpdated.addListener(() => {
-    setSound("tabUpdate", (value) => {
-        sounds.tabUpdate = value;
-    });
-    playSound(sounds.tabUpdate, "tabUpdate");
-});
-
-tabs.onCreated.addListener(() => {
-    setSound("tabNew", (value) => {
-        sounds.tabNew = value;
-    });
-    playSound(sounds.tabNew, "tabNew");
-});
-
-tabs.onRemoved.addListener(() => {
-    setSound("tabClose", (value) => {
-        sounds.tabClose = value;
-    });
-    playSound(sounds.tabClose, "tabClose");
+// Close offscreen on request from offscreen page
+// Close offscreen on request from offscreen page
+runtime.onMessage.addListener((message) => {
+    if (message?.type === 'closeOffscreen') {
+        offscreen.closeDocument().catch((err) => {
+            // Ignore if no document to close
+            if (!err.message.includes('No current offscreen document')) {
+                console.error('Error closing offscreen document:', err);
+            }
+        });
+    }
 });

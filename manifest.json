@@ -1,18 +1,21 @@
 {
-    "name": "UI Sounds",
-    "version": "1.1.0",
-    "description": "Play sounds for important events in the browser, such as a page loading or a new tab being created.",
-    "author": "LordLuceus",
-    "manifest_version": 2,
-    "icons": {
-        "128": "icon_128.png",
-        "16": "icon_16.png",
-        "32": "icon_32.png"
-    },
-    "background": {
-        "persistent": false,
-        "scripts": ["background.js"]
-    },
-    "permissions": ["storage"],
-    "options_page": "options.html"
+  "name": "UI Sounds",
+  "version": "2.0.0",
+  "description": "Play sounds for important events in the browser, such as a page loading or a new tab being created.",
+  "author": "LordLuceus",
+  "manifest_version": 3,
+  "icons": {
+    "128": "icon_128.png",
+    "16": "icon_16.png",
+    "32": "icon_32.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage", "tabs", "offscreen"],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "minimum_chrome_version": "109"
 }
