@@ -1,6 +1,6 @@
 {
   "name": "UI Sounds",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Play sounds for important events in the browser, such as a page loading or a new tab being created.",
   "author": "LordLuceus",
   "manifest_version": 3,
